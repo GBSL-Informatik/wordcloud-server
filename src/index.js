@@ -4,69 +4,69 @@ var cors = require("cors");
 const http = require("http");
 const morgan = require("morgan");
 const socketIo = require("socket.io");
-// some initial circles
-const circles = [
-  {
-    size: 1,
-    color: "red"
-  },
-  {
-    size: 5,
-    color: "blue"
-  },
-  {
-    size: 7,
-    color: "green",
-    animated: true
-  },
-  {
-    size: 2,
-    color: "limegreen"
-  }
-];
+
+const words = [];
 
 const port = process.env.PORT || 4001;
 
 const app = express();
 
-//create a server object:
+/**
+ * CREATE A SERVER OBJECT
+ */
 const server = http.createServer(app);
 
+/**
+ * SERVER CONFIGURATION
+ */
+
+// ensure the server can call other domains: enable cross origin resource sharing (cors) 
 app.use(cors());
+
+// received packages should be presented in the JSON format
 app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: true }));
+
+// show some helpful logs in the commandline
 app.use(morgan("dev"));
 
-app.get("/circles", (req, res) => {
-  res.send(circles);
+/**
+ * HTTP ROUTES
+ */
+
+app.get("/words", (req, res) => {
+  res.send(words);
 });
 
-app.post("/circles", (req, res) => {
-  circles.push(req.body);
+app.post("/words", (req, res) => {
+  words.push(req.body);
   res.sendStatus(200);
 });
 app.get("/", (req, res) => {
-  res.send("Welcome to Circle-Server");
+  res.send("Welcome to Wordcloud");
 });
 
-const io = socketIo(server); // < Interesting!
+/**
+ * SOCKET CONFIGURATION
+ */
+// create socket server
+const io = socketIo(server);
 
 io.on("connection", socket => {
   console.log("New client joined: ", socket.id);
   // join room
-  socket.join("circle_room");
+  socket.join("word_room");
   // emit the initial data
-  socket.emit("circle_data", circles);
+  socket.emit("word_data", words);
 
   // report on disconnect
   socket.on("disconnect", () => console.log("Client disconnected"));
 
   // when receiving an 'add_circle' event
-  socket.on("add_circle", circle => {
+  socket.on("add_word", circle => {
     // add the new circle
-    circles.push(circle);
+    words.push(circle);
     // and emit a 'circle_data' event to all the sockets within the room
-    io.in("circle_room").emit("circle_data", circles);
+    io.in("word_room").emit("word_data", words);
   });
 });
 
