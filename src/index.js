@@ -5,6 +5,13 @@ const http = require("http");
 const morgan = require("morgan");
 const socketIo = require("socket.io");
 
+/**
+ * words are object of the form:
+ * {
+ *    word: 'text',
+ *    created_at: '2020-04.25 12:00'
+ * }
+ */
 const words = [];
 
 const port = process.env.PORT || 4001;
