@@ -6,10 +6,10 @@ const morgan = require("morgan");
 const socketIo = require("socket.io");
 
 /**
- * words are object of the form:
+ * words are objects of the form:
  * {
- *    word: 'text',
- *    created_at: '2020-04.25 12:00'
+ *    word: "some text",
+ *    created_at: "2020-04.25 12:00"
  * }
  */
 const words = [];
@@ -39,7 +39,6 @@ app.use(morgan("dev"));
 /**
  * HTTP ROUTES
  */
-
 app.get("/words", (req, res) => {
   res.send(words);
 });
@@ -48,6 +47,7 @@ app.post("/words", (req, res) => {
   words.push(req.body);
   res.sendStatus(200);
 });
+
 app.get("/", (req, res) => {
   res.send("Welcome to Wordcloud");
 });
@@ -68,13 +68,17 @@ io.on("connection", socket => {
   // report on disconnect
   socket.on("disconnect", () => console.log("Client disconnected"));
 
-  // when receiving an 'add_circle' event
+  // when receiving an "add_circle" event
   socket.on("add_word", circle => {
     // add the new circle
     words.push(circle);
-    // and emit a 'circle_data' event to all the sockets within the room
+    // and emit a "circle_data" event to all the sockets within the room
     io.in("word_room").emit("word_data", words);
   });
 });
 
+
+/**
+ * START THE SERVER
+ */
 server.listen(port, () => console.log(`Listening on port ${port}`));

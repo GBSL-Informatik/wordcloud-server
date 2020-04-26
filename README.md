@@ -4,14 +4,9 @@ A plain javascript server with express and socket.io.
 
 [![Check it out on Code Sandbox](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/github/GBSL-Informatik/wordcloud-server)
 
-This can be used in combination with a frontend:
-- [polling with http requests](https://github.com/GBSL-Informatik/wordcloud-http-frontend)
+Use the server in combination with the [wordcloud-frontend](https://github.com/GBSL-Informatik/wordcloud-frontend)
 
-    [![Check it out on Code Sandbox](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/github/GBSL-Informatik/wordcloud-http-frontend)
-
-- [pushing over sockets](https://github.com/GBSL-Informatik/wordcloud-socket-frontend)
-
-    [![Check it out on Code Sandbox](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/github/GBSL-Informatik/wordcloud-socket-frontend)
+[![Check it out on Code Sandbox](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/github/GBSL-Informatik/wordcloud-frontend)
 
 ## install
 
