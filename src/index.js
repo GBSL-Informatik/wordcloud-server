@@ -68,11 +68,16 @@ io.on("connection", socket => {
   // report on disconnect
   socket.on("disconnect", () => console.log("Client disconnected"));
 
-  // when receiving an "add_circle" event
-  socket.on("add_word", circle => {
-    // add the new circle
-    words.push(circle);
-    // and emit a "circle_data" event to all the sockets within the room
+  // when receiving an "add_word" event
+  socket.on("add_word", word => {
+    // add the new words
+    words.push(word);
+    // and emit a "word_data" event to all the sockets within the room
+    io.in("word_room").emit("word_data", words);
+  });
+
+  socket.on("clear", () => {
+    words.length = 0;
     io.in("word_room").emit("word_data", words);
   });
 });
