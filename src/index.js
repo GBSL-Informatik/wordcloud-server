@@ -60,8 +60,6 @@ const io = socketIo(server);
 
 io.on("connection", socket => {
   console.log("New client joined: ", socket.id);
-  // join room
-  socket.join("word_room");
   // emit the initial data
   socket.emit("word_data", words);
 
@@ -72,13 +70,14 @@ io.on("connection", socket => {
   socket.on("add_word", word => {
     // add the new words
     words.push(word);
-    // and emit a "word_data" event to all the sockets within the room
-    io.in("word_room").emit("word_data", words);
+    // and emit a "word_data" event to all sockets
+    // connected to the default namespace "/"
+    io.emit("word_data", words)
   });
 
   socket.on("clear", () => {
     words.length = 0;
-    io.in("word_room").emit("word_data", words);
+    io.emit("word_data", words)
   });
 });
 
