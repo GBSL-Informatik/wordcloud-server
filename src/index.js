@@ -4,6 +4,7 @@ var cors = require("cors");
 const http = require("http");
 const morgan = require("morgan");
 const socketIo = require("socket.io");
+const compression = require("compression");
 
 /**
  * words are objects of the form:
@@ -36,6 +37,12 @@ app.use(bodyParser.json());
 // show some helpful logs in the commandline
 app.use(morgan("dev"));
 
+function shouldCompress(req, res) {
+  return false;
+}
+
+// disable compression
+app.use(compression({ filter: shouldCompress }));
 /**
  * HTTP ROUTES
  */
@@ -45,6 +52,10 @@ app.get("/words", (req, res) => {
 
 app.post("/words", (req, res) => {
   words.push(req.body);
+  res.send(req.body);
+});
+app.post("/clear", (req, res) => {
+  words.length = 0;
   res.sendStatus(200);
 });
 
@@ -74,6 +85,10 @@ io.on("connection", socket => {
     // connected to the default namespace "/"
     io.emit("word_data", words)
   });
+
+  socket.on("get_words", () => {
+    socket.emit("word_data", words);
+  })
 
   socket.on("clear", () => {
     words.length = 0;
